@@ -15,9 +15,9 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 cloudinary.config({
-	cloud_name: 'ddqs5cjil',
-	api_key: '861679751317177',
-	api_secret: 'LehSr2rxRjKAyxH5y5MX8rb08O4',
+	cloud_name: '',
+	api_key: '',
+	api_secret: '',
 });
 
 // Middlewares
