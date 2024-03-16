@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   Image,
-  Spinner,
   Text,
   IconButton,
 } from "@chakra-ui/react";
@@ -78,9 +77,11 @@ const PostPage = () => {
 
   if (!user && loading) {
     return (
-      <Flex justifyContent={"center"}>
-        <Spinner size={"xl"} />
-      </Flex>
+      <Box display="flex" justifyContent="center">
+        <Text fontWeight="bold" color="teal.500" textAlign="center">
+          Loading Post...
+        </Text>
+      </Box>
     );
   }
 
@@ -98,17 +99,24 @@ const PostPage = () => {
       >
         <Flex alignItems="center" mb={{ base: 2, md: 0 }}>
           <Link to={`/user/${user.username}`}>
-            <Avatar
-              src={user?.profilePic}
-              size={"md"}
-              name={user?.name}
-              mr={{ base: 0, md: 4 }}
-              mb={{ base: 0, md: 0 }}
-            />
+            <Box borderRadius="full" overflow="hidden" border="2px solid light-blue">
+              <Avatar
+                src={user?.profilePic}
+                size={"md"}
+                name={user?.name}
+                mr={0}
+                mb={0}
+              />
+            </Box>
           </Link>
           <Flex alignItems="center">
             <Link to={`/user/${user.username}`}>
-              <Text fontSize={"md"} fontWeight={"bold"} color="teal.700" ml={{ base: 2, md: 4 }}>
+              <Text
+                fontSize={"md"}
+                fontWeight={"bold"}
+                color="teal.500"
+                ml={{ base: 2, md: 4 }}
+              >
                 {user.username}
               </Text>
             </Link>
@@ -116,10 +124,10 @@ const PostPage = () => {
           </Flex>
         </Flex>
 
-        <Flex alignItems="center" mt={{ base: 0, md: 0 }}>
+        <Flex alignItems="center" mt={0}>
           <Text
             fontSize={{ base: "sm", md: "xs" }}
-            textAlign={{ base: "center", md: "center" }}
+            textAlign={"center"}
             color={"gray.light"}
             mr={{ base: 2, md: 4 }}
           >
@@ -148,7 +156,6 @@ const PostPage = () => {
 
       <Box p={4} bg="teal.50" borderRadius={6} mt={3}>
         <Text>{currentPost.text}</Text>
-
         {currentPost.img && (
           <Box
             borderRadius={6}
@@ -160,7 +167,6 @@ const PostPage = () => {
             <Image src={currentPost.img} w={"full"} />
           </Box>
         )}
-
         <Flex gap={3} my={3}>
           <Actions post={currentPost} />
         </Flex>
@@ -182,7 +188,7 @@ const PostPage = () => {
           ))
         ) : (
           <Flex alignItems="center" justifyContent="center">
-            <AiOutlineMeh size={24} color="teal.400" /> 
+            <AiOutlineMeh size={24} color="teal.400" />
             <Text ml={2} color="teal.400" fontWeight="bold">
               No replies yet.
             </Text>

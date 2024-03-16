@@ -140,12 +140,12 @@ import {
 		</Flex>
   
 		<Flex gap={2} alignItems={"center"}>
-		  <Text color={"gray.500"} fontSize={{ base: "xs", md: "sm" }}>
-			{post.replies.length} replies
+		<Text color={"gray.500"} fontSize={{ base: "xs", md: "sm" }}>
+			{post.likes.length} likes
 		  </Text>
 		  <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.500"}></Box>
 		  <Text color={"gray.500"} fontSize={{ base: "xs", md: "sm" }}>
-			{post.likes.length} likes
+			{post.replies.length} replies
 		  </Text>
 		</Flex>
   

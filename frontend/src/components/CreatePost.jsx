@@ -115,7 +115,7 @@ const CreatePost = () => {
             Create Verse
           </ModalHeader>
 
-          <ModalCloseButton />
+          <ModalCloseButton color={"red.700"} fontWeight="bold"/>
           <ModalBody pb={6}>
             <FormControl>
               <Textarea

@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import { useSocket } from "../context/SocketContext";
-
-import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Flex,
   Input,
-  Skeleton,
-  SkeletonCircle,
   Text,
+  IconButton,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { GiConversation } from "react-icons/gi";
+import { IoMdHappy } from "react-icons/io";
 
 import Conversation from "../components/Conversation";
 import MessageContainer from "../components/MessageContainer";
 
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import useShowToast from "../hooks/useShowToast";
-
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   conversationsAtom,
@@ -27,57 +23,23 @@ import {
 } from "../atoms/messagesAtom";
 import userAtom from "../atoms/userAtom";
 
+import { FiSearch } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const ChatPage = () => {
   const [searchingUser, setSearchingUser] = useState(false);
-  const [loadingConversations, setLoadingConversations] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom,);
+
+  const [loadingConversations, setLoadingConversations] = useState(true);
+
+  const [selectedConversation, setSelectedConversation] = useRecoilState(
+    selectedConversationAtom,
+  );
+
   const [conversations, setConversations] = useRecoilState(conversationsAtom);
   const currentUser = useRecoilValue(userAtom);
   const showToast = useShowToast();
   const { socket, onlineUsers } = useSocket();
-
-  useEffect(() => {
-    socket?.on("messagesSeen", ({ conversationId }) => {
-      setConversations((prev) => {
-        const updatedConversations = prev.map((conversation) => {
-          if (conversation._id === conversationId) {
-            return {
-              ...conversation,
-              lastMessage: {
-                ...conversation.lastMessage,
-                seen: true,
-              },
-            };
-          }
-          return conversation;
-        });
-        return updatedConversations;
-      });
-    });
-  }, [socket, setConversations]);
-
-  useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const res = await fetch("/api/messages/conversations");
-        const data = await res.json();
-        if (data.error) {
-          showToast("Error", data.error, "error");
-          return;
-        }
-        console.log(data);
-        setConversations(data);
-      } catch (error) {
-        showToast("Error", error.message, "error");
-      } finally {
-        setLoadingConversations(false);
-      }
-    };
-
-    getConversations();
-  }, [showToast, setConversations]);
 
   const handleConversationSearch = async (e) => {
     e.preventDefault();
@@ -86,7 +48,11 @@ const ChatPage = () => {
       const res = await fetch(`/api/users/profile/${searchText}`);
       const searchedUser = await res.json();
       if (searchedUser.error) {
-        showToast("Error", searchedUser.error, "error");
+        showToast(
+          "Error",
+          "User Not Found! Please Enter Correct Username",
+          "error",
+        );
         return;
       }
 
@@ -125,7 +91,7 @@ const ChatPage = () => {
           },
         ],
       };
-      setConversations((prevConvs) => [...prevConvs, mockConversation]);
+      setConversations([mockConversation, ...conversations]);
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
@@ -133,30 +99,80 @@ const ChatPage = () => {
     }
   };
 
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await fetch("/api/messages/conversations");
+        const data = await res.json();
+        if (data.error) {
+          showToast("Error", data.error, "error");
+          return;
+        }
+        setConversations(data);
+      } catch (error) {
+        showToast("Error", error.message, "error");
+      } finally {
+        setLoadingConversations(false);
+      }
+    };
+    getConversations();
+  }, [showToast, setConversations]);
+
+  useEffect(() => {
+    socket?.on("messagesSeen", ({ conversationId }) => {
+      setConversations((prev) => {
+        const updatedConversations = prev.map((conversation) => {
+          if (conversation._id === conversationId) {
+            return {
+              ...conversation,
+              lastMessage: {
+                ...conversation.lastMessage,
+                seen: true,
+              },
+            };
+          }
+          return conversation;
+        });
+        return updatedConversations;
+      });
+    });
+  }, [socket, setConversations]);
+
   return (
-	<>
-    <Box
-      position={"absolute"}
-      left={"50%"}
-      w={{ base: "100%", md: "80%", lg: "750px" }}
-      p={4}
-      transform={"translateX(-50%)"}
-    >
+    <>
+      <Header />
+
       <Flex
-        gap={4}
         flexDirection={{ base: "column", md: "row" }}
         maxW={{
           sm: "400px",
           md: "full",
         }}
+        minH={{
+          sm: "400px",
+          md: "400px",
+        }}
         mx={"auto"}
+        mb="75px"
+        bg="white"
+        p={4}
+        borderRadius="md"
+        boxShadow="lg"
+        border="2px"
+        borderColor="teal.100"
       >
         <Flex
-          flex={30}
+          flex={{ base: "40", md: "30" }}
           gap={2}
           flexDirection={"column"}
           maxW={{ sm: "250px", md: "full" }}
           mx={"auto"}
+          my={"6px"}
+          ml={{ base: 2, md: 0 }}
+          borderRadius="md"
+          boxShadow="0 0 0 2px teal"
+          padding={{ base: 4, md: 3, lg: 4, xl: 5, "2xl": 6 }}
+          mr={{ base: 2, md: 2 }}
         >
           <Text
             fontWeight={700}
@@ -164,71 +180,121 @@ const ChatPage = () => {
           >
             Your Conversations
           </Text>
-          <form onSubmit={handleConversationSearch}>
-            <Flex alignItems={"center"} gap={2}>
-              <Input
-                placeholder="Search for a user"
-                onChange={(e) => setSearchText(e.target.value)}
-              />
-              <Button
-                size={"sm"}
+
+          <Box
+            height="auto"
+            display="flex"
+            alignItems="center"
+            style={{
+              height: "auto",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Input
+              placeholder="Search for users"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              variant="outline"
+              borderColor="teal.200"
+              _placeholder={{ color: "black", opacity: 0.7, fontSize: "sm" }}
+              _hover={{ borderColor: "teal.300" }}
+              _focus={{ borderColor: "teal.300" }}
+              color="black"
+              bg="white"
+            />
+            <Link to="/search">
+              <IconButton
+                aria-label="Search"
+                icon={<FiSearch />}
+                color="white"
+                bg="teal.300"
+                _hover={{ bg: "teal.400" }}
+                _active={{ bg: "teal.500" }}
                 onClick={handleConversationSearch}
                 isLoading={searchingUser}
-              >
-                <SearchIcon />
-              </Button>
-            </Flex>
-          </form>
-
-          {loadingConversations &&
-            [0, 1, 2, 3, 4].map((_, i) => (
-              <Flex
-                key={i}
-                gap={4}
-                alignItems={"center"}
-                p={"1"}
-                borderRadius={"md"}
-              >
-                <Box>
-                  <SkeletonCircle size={"10"} />
-                </Box>
-                <Flex w={"full"} flexDirection={"column"} gap={3}>
-                  <Skeleton h={"10px"} w={"80px"} />
-                  <Skeleton h={"8px"} w={"90%"} />
-                </Flex>
-              </Flex>
-            ))}
-
-          {!loadingConversations &&
-            conversations.map((conversation) => (
-              <Conversation
-                key={conversation._id}
-                isOnline={onlineUsers.includes(
-                  conversation.participants[0]._id,
-                )}
-                conversation={conversation}
+                ml={4}
               />
-            ))}
+            </Link>
+          </Box>
+
+          {loadingConversations && (
+            <Text fontWeight="bold" color="teal.500" textAlign="center">
+              Loading...
+            </Text>
+          )}
+
+          <Box
+            flex="1"
+            overflowY="auto"
+            mt="2"
+            maxHeight={{ base: "300px", md: "500px" }}
+            width={{ base: "100%", md: "240px" }}
+          >
+            {!loadingConversations &&
+              conversations.map((conversation) => (
+                <Conversation
+                  key={conversation._id}
+                  isOnline={onlineUsers.includes(
+                    conversation.participants[0]._id,
+                  )}
+                  conversation={conversation}
+                />
+              ))}
+
+            {!loadingConversations && conversations.length === 0 && (
+              <Box textAlign="center" mt={8}>
+                <Text fontSize="xl" fontWeight="bold" color="teal.600">
+                  No conversations found.
+                </Text>
+                <Text fontSize="md" mt={2} color="teal.600">
+                  Please search and start a conversation with a user.
+                </Text>
+              </Box>
+            )}
+          </Box>
         </Flex>
+
         {!selectedConversation._id && (
           <Flex
-            flex={70}
+            flex={{ base: "60", md: "70" }}
             borderRadius={"md"}
-            p={2}
+            p={{ base: 4, md: 6 }}
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"center"}
-            height={"400px"}
+            minHeight="100px"
+            bg="teal.500"
+            color="white"
+            boxShadow={{ base: "md", md: "lg" }}
+            mx={"auto"}
+            my={"3px"}
+            border="2px"
+            borderColor="yellow.500"
           >
-            <GiConversation size={100} />
-            <Text fontSize={20}>Select a conversation to start messaging</Text>
+            <IoMdHappy size={64} />
+            <Text fontSize="2xl" mt={4} textAlign="center">
+              Select a conversation to start messaging
+            </Text>
           </Flex>
         )}
 
-        {selectedConversation._id && <MessageContainer />}
+        {selectedConversation._id && (
+          <Flex
+            flex={{ base: "40", md: "70" }}
+            maxHeight={{ base: "700px", md: "700px" }}
+            maxWidth={{ base: "100%", md: "100%" }}
+            alignItems={"center"}
+            justifyContent={"center"}
+            m={"auto"}
+          >
+            <MessageContainer />
+          </Flex>
+        )}
       </Flex>
-    </Box>
-	</>
+
+      <Footer />
+    </>
   );
 };
 

@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Flex,
-  Box,
-  Spinner,
-  Button,
-  Text,
-} from "@chakra-ui/react";
-import { FiMessageSquare } from "react-icons/fi";
+import { useParams, Navigate } from "react-router-dom";
+import { Box, Text } from "@chakra-ui/react";
 import UserHeader from "../components/UserHeader";
 import Post from "../components/Post";
 import useGetUserProfile from "../hooks/useGetUserProfile";
@@ -43,17 +36,45 @@ const UserPage = () => {
     getPosts();
   }, [username, showToast, setPosts, user]);
 
-  const handleChat = () => {};
-
   if (!user && loading) {
     return (
-      <Flex justifyContent={"center"}>
-        <Spinner size={"xl"} />
-      </Flex>
+      <>
+        <Header />
+        <Box display="flex" justifyContent="center" py={9}>
+          {" "}
+          <Text
+            fontWeight="bold"
+            color="teal.500"
+            textAlign="center"
+            fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+          >
+            Loading User's Profile...
+          </Text>
+        </Box>
+        <Footer />
+      </>
     );
   }
 
-  if (!user && !loading) return <h1>User not found</h1>;
+  if (!user && !loading) {
+    return (
+      <>
+        <Header />
+        <Box display="flex" justifyContent="center" py={9}>
+          {" "}
+          <Text
+            fontWeight="bold"
+            color="teal.500"
+            textAlign="center"
+            fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+          >
+            No User Found :(
+          </Text>
+        </Box>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -61,36 +82,25 @@ const UserPage = () => {
 
       <UserHeader user={user} />
 
-      <Box mb="100px">
+      <Box mt="10px" mb="100px">
         {!fetchingPosts && posts.length === 0 && (
-          <Flex overflow="hidden" direction="column" align="center" p={4}>
-            <Text
-              textAlign="center"
-              color="red.600"
-              fontSize="xl"
-              fontWeight="bold"
-              mb={4}
-            >
-              Oops! It seems like this user hasn't shared any verse yet.
-            </Text>
-            <Button
-              leftIcon={<FiMessageSquare />}
-              colorScheme="red"
-              size="lg"
-              onClick={handleChat}
-              _hover={{ bg: "red.500" }}
-              w="100%"
-              maxW="300px"
-            >
-              Chat to help them add a verse
-            </Button>
-          </Flex>
+          <Text
+            textAlign="center"
+            color="red.600"
+            fontSize="xl"
+            fontWeight="bold"
+            mb={4}
+          >
+            Oops! It seems like user hasn't shared any verse yet.
+          </Text>
         )}
 
         {fetchingPosts && (
-          <Flex justifyContent={"center"} my={12}>
-            <Spinner size={"xl"} />
-          </Flex>
+          <Box display="flex" justifyContent="center">
+            <Text fontWeight="bold" color="teal.500" textAlign="center">
+              Loading...
+            </Text>
+          </Box>
         )}
 
         {posts.map((post) => (
