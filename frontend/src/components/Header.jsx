@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 
 const Header = () => {
   return (
@@ -10,14 +10,16 @@ const Header = () => {
         mt={3}
         mb={6}
         px={4}
-        bg="gray.200"
-		width="100%"
+        bg="yellow.50"
+        width="100%"
       >
-        <Flex flex={1} justifyContent="center" alignItems="center">
-          <Text fontSize="2xl" fontWeight="bold" color="black">
-            Versify
-          </Text>
-        </Flex>
+        <Box flex={{ base: 1, md: "auto" }} ml={{ base: -2, md: 0 }}>
+          <Flex justifyContent="center" alignItems="center">
+            <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }} fontWeight="bold" color="black">
+              Versify
+            </Text>
+          </Flex>
+        </Box>
       </Flex>
     </>
   );

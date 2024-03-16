@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Heading, Spinner, Icon } from "@chakra-ui/react";
+import { Box, Heading, Icon, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { StarIcon } from "@chakra-ui/icons";
 import Post from "../components/Post";
@@ -37,25 +37,27 @@ const HomePage = () => {
   return (
     <>
       <Header />
-      <Box width="full" maxW="1200px" mx="auto" mb="100px" px={{ base: 4, md: 8 }}>
+      <Box
+        width="full"
+        maxW="1200px"
+        mx="auto"
+        mb="100px"
+        px={{ base: 4, md: 8 }}
+      >
         {!loading && posts.length === 0 && (
           <Box textAlign="center" mt={10} mb={6}>
-            <Heading as="h1" size="xl" fontWeight="bold" color="teal.500" mb={4} p={5}>
+            <Heading as="h1" size="xl" fontWeight="bold" color="teal.500" p={5}>
               <Icon as={StarIcon} w={6} h={6} color="yellow.400" mr={2} />
-              Follow Some Folks To See The World
+              Tune Some Folks In :)
             </Heading>
           </Box>
         )}
 
-        <Box textAlign="center" mb={6}>
-          <RouterLink to="/search" style={{ color: "teal", fontWeight: "bold", fontSize: "lg" }}>
-            Start Exploring
-          </RouterLink>
-        </Box>
-
         {loading && (
           <Box display="flex" justifyContent="center">
-            <Spinner size="xl" />
+            <Text fontWeight="bold" color="teal.500" textAlign="center">
+              Loading...
+            </Text>
           </Box>
         )}
 
@@ -63,14 +65,20 @@ const HomePage = () => {
           <Post key={post._id} post={post} postedBy={post.postedBy} />
         ))}
 
-        <Box textAlign="center" mt={8} mb={4} fontSize="lg">
-          Want more?{" "}
-          <RouterLink to="/search" style={{ color: "teal", fontWeight: "bold" }}>
-            Search for new users
-          </RouterLink>{" "}
-          and follow them to see more posts.
-        </Box>
+        {!loading && posts.length !== 0 && (
+          <Box textAlign="center" mt={8} mb={4} fontSize="lg">
+            Want more?{" "}
+            <RouterLink
+              to="/search"
+              style={{ color: "teal", fontWeight: "bold" }}
+            >
+              Search for new users
+            </RouterLink>{" "}
+            and follow them to see more posts.
+          </Box>
+        )}
       </Box>
+
       <Footer />
     </>
   );

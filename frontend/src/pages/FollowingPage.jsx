@@ -16,7 +16,7 @@ const SearchPage = () => {
     const handleSearch = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/users/tunning/${username}`);
+        const response = await fetch(`/api/users/listening/${username}`);
         if (!response.ok) {
           const data = await response.json();
           showToast("Error", data.error, "error");
@@ -44,16 +44,16 @@ const SearchPage = () => {
       >
         <Box flex="1" p="4" overflowY="auto">
           {loading && (
-           <Box display="flex" justifyContent="center">
-           <Text fontWeight="bold" color="teal.500" textAlign="center">
-             Loading...
-           </Text>
-         </Box>
+            <Box display="flex" justifyContent="center">
+            <Text fontWeight="bold" color="teal.500" textAlign="center">
+              Loading...
+            </Text>
+          </Box>
           )}
           {!loading && searchResults.length === 0 && (
             <Box my="6" textAlign="center">
               <Text fontWeight="bold" color="red.500" fontSize="lg">
-                No, Tunners Found :(
+                No, Listeners Found :(
               </Text>
               <Text mt="2" color="gray.600">
                 It seems there are currently no listeners for this profile.
@@ -64,7 +64,7 @@ const SearchPage = () => {
             <Box my="6">
               <Flex justify="center" align="center" mb="4">
                 <Text fontWeight="bold" color="teal.500" mr="2">
-                  Tunners
+                  Listeners
                 </Text>
                 <Box bg="teal" color="white" borderRadius="md" px="2">
                   {searchResults.length}

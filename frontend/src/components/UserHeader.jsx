@@ -9,7 +9,7 @@ import {
 	Button,
 	useToast,
 	useBreakpointValue,
-	Image
+	Image,
   } from "@chakra-ui/react";
   import {
 	FiClipboard,
@@ -25,14 +25,13 @@ import {
   import useLogout from "../hooks/useLogout";
   
   const UserHeader = ({ user }) => {
-
 	const logout = useLogout();
 	const toast = useToast();
 	const currentUser = useRecoilValue(userAtom);
 	const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
-	const avatarSize = useBreakpointValue({ base: "xl", md: "2xl" }); // Responsive avatar size
-	const buttonSize = useBreakpointValue({ base: "sm", md: "md" }); // Responsive button size
-	const flexDirection = useBreakpointValue({ base: "row", md: "row" }); // Stack direction
+	const avatarSize = useBreakpointValue({ base: "xl", md: "2xl" });
+	const buttonSize = useBreakpointValue({ base: "sm", md: "md" });
+	const flexDirection = useBreakpointValue({ base: "row", md: "row" });
   
 	const copyURL = () => {
 	  const currentURL = window.location.href;
@@ -61,21 +60,20 @@ import {
 			width="100%"
 		  >
 			<Box>
-			<Flex alignItems="center">
-			  <Text
-				fontSize={{ base: "2xl", md: "3xl" }}
-				fontWeight={"extrabold"}
-				color={"teal.800"}
-				mb={{ base: 2, md: 1 }}
-			  >
-				{user.name}
-			  </Text>
-			  <Image src="/verified.png" w="4" h={4} ml={1} />
+			  <Flex alignItems="center">
+				<Text
+				  fontSize={{ base: "2xl", md: "3xl" }}
+				  fontWeight={"extrabold"}
+				  color={"teal.800"}
+				  mb={{ base: 2, md: 1 }}
+				>
+				  {user.name}
+				</Text>
+				<Image src="/verified.png" w="4" h={4} ml={1} />
 			  </Flex>
 			  <Text fontSize={"md"} color={"gray.500"} fontStyle="italic">
 				@{user.username}
 			  </Text>
-			  
 			</Box>
 			<Avatar
 			  name={user.name}
@@ -119,7 +117,7 @@ import {
 			  </Box>
   
 			  {currentUser?._id === user._id && (
-				<Link as={RouterLink} to="/update">
+				<Link as={RouterLink} to={`/${user.username}/update`}>
 				  <Button
 					leftIcon={<FiEdit />}
 					size={buttonSize}
@@ -151,36 +149,38 @@ import {
 			justifyContent={"space-between"}
 		  >
 			<Flex gap={2}>
-			<RouterLink to={`/tunning/${user.username}`}>
-			  <Button size={buttonSize} colorScheme="teal">
-				<Text>
-				  <span
-					style={{
-					  fontWeight: "bold",
-					  fontSize: "larger",
-					  color: "yellow",
-					}}
-				  >
-					{user.followers.length}
-				  </span>
-				  &nbsp;Tuning In
-				</Text>
-			  </Button>
+			  <RouterLink to={`/tunning/${user.username}`}>
+				<Button size={buttonSize} colorScheme="teal">
+				  <Text>
+					<span
+					  style={{
+						fontWeight: "bold",
+						fontSize: "larger",
+						color: "yellow",
+					  }}
+					>
+					  {user.followers.length}
+					</span>
+					&nbsp;Tuning In
+				  </Text>
+				</Button>
 			  </RouterLink>
-			  <Button size={buttonSize} colorScheme="teal" onClick={copyURL}>
-				<Text>
-				  <span
-					style={{
-					  fontWeight: "bold",
-					  fontSize: "larger",
-					  color: "yellow",
-					}}
-				  >
-					{user.following.length}
-				  </span>
-				  &nbsp;Listening To
-				</Text>
-			  </Button>
+			  <RouterLink to={`/listening/${user.username}`}>
+				<Button size={buttonSize} colorScheme="teal">
+				  <Text>
+					<span
+					  style={{
+						fontWeight: "bold",
+						fontSize: "larger",
+						color: "yellow",
+					  }}
+					>
+					  {user.following.length}
+					</span>
+					&nbsp;Listening To
+				  </Text>
+				</Button>
+			  </RouterLink>
 			</Flex>
   
 			<Flex gap={2} align="center">

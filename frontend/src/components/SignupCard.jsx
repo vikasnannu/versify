@@ -10,91 +10,89 @@ import {
 	Button,
 	Heading,
 	Text,
-	useColorModeValue,
   } from "@chakra-ui/react";
   import { useState } from "react";
   import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
   import { Link as RouterLink, Navigate } from "react-router-dom";
   import { useSetRecoilState } from "recoil";
-  import authScreenAtom from "../atoms/authAtom";
   import useShowToast from "../hooks/useShowToast";
   import userAtom from "../atoms/userAtom";
   
-  export default function SignupCard() {
+  const SignupCard = () => {
 	const [showPassword, setShowPassword] = useState(false);
-	const setAuthScreen = useSetRecoilState(authScreenAtom);
 	const [inputs, setInputs] = useState({
-		name: "",
-		username: "",
-		email: "",
-		password: "",
+	  name: "",
+	  username: "",
+	  email: "",
+	  password: "",
 	});
-
+  
 	const showToast = useShowToast();
 	const setUser = useSetRecoilState(userAtom);
-
+  
 	const handleSignup = async () => {
-		try {
-			const res = await fetch("/api/users/signup", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(inputs),
-			});
-			const data = await res.json();
-
-			if (data.error) {
-				showToast("Error", data.error, "error");
-				return;
-			}
-
-			localStorage.setItem("user-threads", JSON.stringify(data));
-			setUser(data);
-			<Navigate to="/home"/>;
-			console.log("User Registered Succesfully!");
-			
-		} catch (error) {
-			showToast("Error", error, "error");
+	  try {
+		const res = await fetch("/api/users/signup", {
+		  method: "POST",
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		  body: JSON.stringify(inputs),
+		});
+		const data = await res.json();
+  
+		if (data.error) {
+		  showToast("Error", data.error, "error");
+		  return;
 		}
+  
+		localStorage.setItem("user-threads", JSON.stringify(data));
+		setUser(data);
+		<Navigate to="/home" />;
+		console.log("User Registered Succesfully!");
+	  } catch (error) {
+		showToast("Error", error, "error");
+	  }
 	};
-
   
 	return (
 	  <Flex
 		align="center"
 		justify="center"
-		minHeight={{ base: "auto", md: "60vh" }} // Change from '80vh' to 'auto' for base to reduce unnecessary space
+		minHeight={{ base: "auto", md: "60vh" }}
 	  >
 		<Stack
-		  spacing={5} // Reduced spacing for all views, adjust as necessary
+		  spacing={5}
 		  mx="auto"
 		  w={{ base: "90%", sm: "80%", md: "60%", lg: "480px" }}
-		  py={{ base: 6, md: 12 }} // Less padding for base compared to md
+		  py={{ base: 6, md: 12 }}
 		  px={6}
 		>
 		  <Stack align="center">
 			<Heading
 			  fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
-			  color={useColorModeValue("gray.700", "white")}
+			  color={"gray.700"}
 			  textAlign="center"
 			>
 			  Create Your Account
 			</Heading>
 			<Text
 			  fontSize={{ base: "sm", md: "md", lg: "lg" }}
-			  color={useColorModeValue("teal.600", "teal.200")}
+			  color={"teal.600"}
 			  textAlign="center"
 			  fontWeight="medium"
-			  mt={{ base: 2, md: 4 }} // Reduce margin-top for base
+			  mt={{ base: 2, md: 4 }}
 			>
 			  Join us and start your journey
 			</Text>
 		  </Stack>
 		  <Box
 			rounded="lg"
-			bg={useColorModeValue("white", "gray.700")}
+			bg={"white"}
 			boxShadow="xl"
+			border="2px solid"
+			borderColor="teal.500"
+			borderRadius="md"
 			p={{ base: 4, md: 8 }}
 		  >
 			<Stack spacing={4}>
@@ -110,6 +108,7 @@ import {
 					  setInputs({ ...inputs, name: e.target.value })
 					}
 					value={inputs.name}
+					maxLength={10}
 				  />
 				</FormControl>
 				<FormControl isRequired>
@@ -120,6 +119,7 @@ import {
 					  setInputs({ ...inputs, username: e.target.value })
 					}
 					value={inputs.username}
+					maxLength={20}
 				  />
 				</FormControl>
 			  </Stack>
@@ -131,6 +131,7 @@ import {
 					setInputs({ ...inputs, email: e.target.value })
 				  }
 				  value={inputs.email}
+				  maxLength={20}
 				/>
 			  </FormControl>
 			  <FormControl isRequired>
@@ -142,6 +143,7 @@ import {
 					  setInputs({ ...inputs, password: e.target.value })
 					}
 					value={inputs.password}
+					maxLength={20}
 				  />
 				  <InputRightElement h="full">
 					<Button
@@ -189,5 +191,6 @@ import {
 		</Stack>
 	  </Flex>
 	);
-  }
+  };
   
+  export default SignupCard;  
