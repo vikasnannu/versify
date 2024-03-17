@@ -1,24 +1,20 @@
-import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./db/connectDB.js";
+import express from "express";
+import connectDatabase from "./configurations/connectDatabase.js";
+import connectCloudinary from "./configurations/connectCloudinary.js";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import messageRoutes from "./routes/message.routes.js";
-import { v2 as cloudinary } from "cloudinary";
-import { app, server } from "./socket/socket.js";
+import { app, server } from "./configurations/socket.js";
 
 dotenv.config();
 
-connectDB();
-
 const PORT = process.env.PORT || 5000;
 
-cloudinary.config({
-  cloud_name: "ddqs5cjil",
-  api_key: "861679751317177",
-  api_secret: "LehSr2rxRjKAyxH5y5MX8rb08O4",
-});
+// Connecting Database/s
+await connectDatabase();
+await connectCloudinary();
 
 // Middlewares
 app.use(express.json({ limit: "50mb" }));
@@ -30,6 +26,11 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/messages", messageRoutes);
 
-server.listen(PORT, () =>
-  console.log(`Server started at http://localhost:${PORT}`),
-);
+try {
+  server.listen(PORT, () =>
+    console.log(`Server Started Succesfully at http://localhost:${PORT}`),
+  );
+} catch (error) {
+  console.error(`Server Connection Failed: ${error.message}`);
+  process.exit(1);
+}
