@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -19,14 +19,46 @@ const styles = {
 
 const theme = extendTheme({ styles });
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <RecoilRoot>
-    <BrowserRouter>
-      <ChakraProvider theme={theme}>
-        <SocketContextProvider>
-          <App />
-        </SocketContextProvider>
-      </ChakraProvider>
-    </BrowserRouter>
-  </RecoilRoot>,
-);
+function LoadingIndicator() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <p>Loading...</p>
+    </div>
+  );
+}
+
+function Root() {
+  console.log("Context Setting....");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return loading ? (
+    <LoadingIndicator />
+  ) : (
+    <RecoilRoot>
+      <BrowserRouter>
+        <ChakraProvider theme={theme}>
+          <SocketContextProvider>
+            <App />
+          </SocketContextProvider>
+        </ChakraProvider>
+      </BrowserRouter>
+    </RecoilRoot>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Root />);

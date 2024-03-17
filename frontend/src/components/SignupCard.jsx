@@ -131,7 +131,7 @@ import {
 					setInputs({ ...inputs, email: e.target.value })
 				  }
 				  value={inputs.email}
-				  maxLength={20}
+				  maxLength={30}
 				/>
 			  </FormControl>
 			  <FormControl isRequired>
