@@ -9,13 +9,12 @@ import {
   ListItem,
   ListIcon,
   Button,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { MdCheckCircle } from "react-icons/md";
 import { FiBox } from "react-icons/fi";
 
 const AboutUs = () => {
-  const tealColor = useColorModeValue("teal.500", "teal.300");
+  const tealColor = "teal.500"
 
   return (
     <>

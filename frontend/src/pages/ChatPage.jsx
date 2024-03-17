@@ -6,7 +6,6 @@ import {
   Input,
   Text,
   IconButton,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { IoMdHappy } from "react-icons/io";
 
@@ -176,7 +175,7 @@ const ChatPage = () => {
         >
           <Text
             fontWeight={700}
-            color={useColorModeValue("gray.600", "gray.400")}
+            color="gray.600"
           >
             Your Conversations
           </Text>

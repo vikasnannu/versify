@@ -10,7 +10,6 @@ import {
 	Stack,
 	Heading,
 	Text,
-	useColorModeValue,
   } from "@chakra-ui/react";
   import { useState } from "react";
   import { Link as RouterLink } from "react-router-dom";
@@ -68,14 +67,14 @@ import {
 			<Stack align="center">
 			  <Heading
 				fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
-				color={useColorModeValue("gray.700", "white")}
+				color= "gray.700"
 				textAlign="center"
 			  >
 				Sign In Your Account
 			  </Heading>
 			  <Text
 				fontSize={{ base: "sm", md: "md", lg: "lg" }}
-				color={useColorModeValue("teal.600", "teal.200")}
+				color="teal.600"
 				textAlign="center"
 				fontWeight="medium"
 				mt={{ base: 2, md: 4 }}
@@ -85,7 +84,7 @@ import {
 			</Stack>
 			<Box
 			  rounded="lg"
-			  bg={useColorModeValue("white", "gray.700")}
+			  bg="white"
 			  boxShadow="xl"
 			  p={8}
 			  border="2px solid"
