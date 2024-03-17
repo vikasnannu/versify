@@ -11,7 +11,7 @@ const signupUser = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (user) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: "User Already Exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -36,11 +36,11 @@ const signupUser = async (req, res) => {
         profilePic: newUser.profilePic,
       });
     } else {
-      res.status(400).json({ error: "Invalid user data" });
+      res.status(400).json({ error: "Invalid User Data" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log("Error in signupUser: ", err.message);
+    console.log("Error in Signing Up User: ", err.message);
   }
 };
 
@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
     );
 
     if (!user || !isPasswordCorrect)
-      return res.status(400).json({ error: "Invalid username or password" });
+      return res.status(400).json({ error: "Invalid Username or Password" });
 
     if (user.isFrozen) {
       user.isFrozen = false;
@@ -73,17 +73,17 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log("Error in loginUser: ", error.message);
+    console.log("Error in Logging In User: ", error.message);
   }
 };
 
 const logoutUser = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 1 });
-    res.status(200).json({ message: "User logged out successfully" });
+    res.status(200).json({ message: "User Logged Out Successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log("Error in signupUser: ", err.message);
+    console.log("Error in Loggin Out User: ", err.message);
   }
 };
 
@@ -106,11 +106,11 @@ const getUserProfile = async (req, res) => {
         .select("-updatedAt");
     }
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) return res.status(404).json({ error: "User Not Found" });
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log("Error in getUserProfile: ", err.message);
+    console.log("Error in Getting User's Profile: ", err.message);
   }
 };
 
@@ -121,12 +121,12 @@ const updateUser = async (req, res) => {
   const userId = req.user._id;
   try {
     let user = await User.findById(userId);
-    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!user) return res.status(400).json({ error: "User Not Found" });
 
     if (req.params.id !== userId.toString())
       return res
         .status(400)
-        .json({ error: "You cannot update other user's profile" });
+        .json({ error: "You Cannot Update Other User's Profile" });
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -167,7 +167,7 @@ const updateUser = async (req, res) => {
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log("Error in updateUser: ", err.message);
+    console.log("Error in Updating User: ", err.message);
   }
 };
 
@@ -189,10 +189,12 @@ const getSuggestedUsers = async (req, res) => {
       (user) => !usersFollowedByYou.following.includes(user._id),
     );
     const suggestedUsers = filteredUsers.slice(0, 6);
+
     suggestedUsers.forEach((user) => (user.password = null));
     res.status(200).json(suggestedUsers);
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log("Error in Getting Suggested Users: ", err.message);
   }
 };
 
@@ -206,7 +208,7 @@ const getSearchUser = async (req, res) => {
       .select("-updatedAt");
     res.json(users);
   } catch (error) {
-    console.error("Error searching users:", error);
+    console.error("Error in Searching Users:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -217,16 +219,17 @@ const getUserFollowers = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User Not Found" });
     }
 
     const following = await User.find({ _id: { $in: user.followers } })
       .select("-password")
       .select("-updatedAt");
+
     res.status(200).json(following);
   } catch (error) {
-    console.error("Error fetching following:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error in Fetching Followers of Users:", error);
   }
 };
 
@@ -245,8 +248,8 @@ const getUserFollowing = async (req, res) => {
 
     res.status(200).json(following);
   } catch (error) {
-    console.error("Error fetching following:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error in Fetching Following of User:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -259,25 +262,25 @@ const followUnFollowUser = async (req, res) => {
     if (id === req.user._id.toString())
       return res
         .status(400)
-        .json({ error: "You cannot follow/unfollow yourself" });
+        .json({ error: "You Cannot Follow/Unfollow Yourself" });
 
     if (!userToModify || !currentUser)
-      return res.status(400).json({ error: "User not found" });
+      return res.status(400).json({ error: "User Not Found" });
 
     const isFollowing = currentUser.following.includes(id);
 
     if (isFollowing) {
       await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
-      res.status(200).json({ message: "User unfollowed successfully" });
+      res.status(200).json({ message: "User Unfollowed Successfully" });
     } else {
       await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
-      res.status(200).json({ message: "User followed successfully" });
+      res.status(200).json({ message: "User Followed Successfully" });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log("Error in followUnFollowUser: ", err.message);
+    console.log("Error in Following/Unfollowing : ", err.message);
   }
 };
 

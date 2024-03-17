@@ -55,6 +55,7 @@ async function sendMessage(req, res) {
     res.status(201).json(newMessage);
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log("Error in Sending Message: ", err.message);
   }
 }
 
@@ -68,7 +69,7 @@ async function getMessages(req, res) {
     });
 
     if (!conversation) {
-      return res.status(404).json({ error: "Conversation not found" });
+      return res.status(404).json({ error: "Conversation Not Found" });
     }
 
     const messages = await Message.find({
@@ -78,6 +79,7 @@ async function getMessages(req, res) {
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log("Error in Getting Messages of Users: ", err.message);
   }
 }
 
@@ -101,11 +103,12 @@ async function getConversations(req, res) {
     res.status(200).json(conversations);
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log("Error in Getting Conversation of Users: ", err.message);
   }
 }
 
 export { 
-	sendMessage, 
-	getMessages, 
-	getConversations 
+  sendMessage, 
+  getMessages, 
+  getConversations 
 };
