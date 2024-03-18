@@ -28,7 +28,7 @@ app.use("/api/messages", messageRoutes);
 
 try {
   server.listen(PORT, () =>
-    console.log(`Server Started Succesfully at http://localhost:${PORT}`),
+    console.log(`Server Started Succesfully at Port: ${PORT}`),
   );
 } catch (error) {
   console.error(`Server Connection Failed: ${error.message}`);

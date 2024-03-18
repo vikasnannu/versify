@@ -8,7 +8,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://versify-seven.vercel.app","https://versify-server.up.railway.app"],
+    origin: ["https://versify-seven.vercel.app"],
+    credentials: true,
     methods: ["GET", "POST"],
   },
 });
