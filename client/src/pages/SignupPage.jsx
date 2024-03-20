@@ -41,9 +41,6 @@ const SignupPage = () => {
           fontWeight="bold"
           color="gray.600"
           textAlign="center"
-          position="fixed"
-          bottom="0"
-          width="100%"
         >
           © 2024 Versify. All rights reserved.
         </Box>
