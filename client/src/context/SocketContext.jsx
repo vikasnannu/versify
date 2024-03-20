@@ -14,8 +14,10 @@ export const SocketContextProvider = ({ children }) => {
 	const [onlineUsers, setOnlineUsers] = useState([]);
 	const user = useRecoilValue(userAtom);
 
+	//http://localhost:5000
+	
 	useEffect(() => {
-		const socket = io("http://localhost:5000", {
+		const socket = io("https://versify-server.up.railway.app", {
 			query: {
 				userId: user?._id,
 			},
