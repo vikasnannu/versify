@@ -48,8 +48,8 @@ import {
   
 		localStorage.setItem("user-threads", JSON.stringify(data));
 		setUser(data);
+		showToast("Success", "Signed Up Succesfully", "success");
 		<Navigate to="/home" />;
-		console.log("User Registered Succesfully!");
 	  } catch (error) {
 		showToast("Error", error, "error");
 	  }
