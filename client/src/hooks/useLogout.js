@@ -23,6 +23,7 @@ const useLogout = () => {
 
       localStorage.removeItem("user-threads");
       setUser(null);
+      showToast("Success", "Looged Out Succesfully", "success");
     } catch (error) {
       showToast("Error", error, "error");
     }
