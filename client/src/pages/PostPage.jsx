@@ -50,7 +50,7 @@ const PostPage = () => {
       }
     };
     getPost();
-  }, [showToast, pid, setPosts]);
+  }, [showToast, pid, setPosts, currentPost]);
 
   const handleDeletePost = async () => {
     setIsDeleteModalOpen(true);
