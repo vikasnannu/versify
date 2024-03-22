@@ -16,8 +16,10 @@ import {
   import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
   import { useSetRecoilState } from "recoil";
   import userAtom from "../atoms/userAtom";
+  import useShowToast from "../hooks/useShowToast";
   
   const LoginCard = () => {
+	const showToast = useShowToast();
 	const [showPassword, setShowPassword] = useState(false);
 	const setUser = useSetRecoilState(userAtom);
 	const [loading, setLoading] = useState(false);
@@ -42,6 +44,7 @@ import {
 		}
 		localStorage.setItem("user-threads", JSON.stringify(data));
 		setUser(data);
+		showToast("Success", "Logged In Succesfully", "success");
 	  } catch (error) {
 		showToast("Error", error.toString(), "error");
 	  } finally {
