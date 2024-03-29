@@ -108,7 +108,7 @@ const AboutUs = () => {
           fontWeight="bold"
           color="gray.600"
           textAlign="center"
-          position="fixed"
+          botton="0"
           width="100%"
         >
           © 2024 Versify. All rights reserved.
